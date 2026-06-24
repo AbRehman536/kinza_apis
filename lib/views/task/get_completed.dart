@@ -2,44 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:kinza_apis/models/taskListing.dart';
 import 'package:kinza_apis/services/task.dart';
 import 'package:kinza_apis/views/task/create_task.dart';
-import 'package:kinza_apis/views/task/get_completed.dart';
-import 'package:kinza_apis/views/task/get_incompleted.dart';
 import 'package:kinza_apis/views/task/update_task.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/user_token_provider.dart';
 
-class GetAllTask extends StatelessWidget {
-  const GetAllTask({super.key});
+class GetCompletedTask extends StatelessWidget {
+  const GetCompletedTask({super.key});
 
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Get All Task"),
+        title: Text("Get Completed Task"),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> GetCompletedTask()));
-          }, icon: Icon(Icons.circle)),
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> GetInCompletedTask()));
-          }, icon: Icon(Icons.incomplete_circle)),
-        ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateTask()));
-      },child: Icon(Icons.add),),
       body: FutureProvider.value(
-          value: TaskServices().getAllTask(userProvider.getToken().toString()),
-          initialData: TaskListingModel(),
-          builder: (context, child){
-            TaskListingModel taskListingModel =context.watch<TaskListingModel>();
-            return ListView.builder(
-              itemCount: taskListingModel.tasks!.length,
-              itemBuilder: (BuildContext context, int index) {
+        value: TaskServices().getCompletedTask(userProvider.getToken().toString()),
+        initialData: TaskListingModel(),
+        builder: (context, child){
+          TaskListingModel taskListingModel =context.watch<TaskListingModel>();
+          return ListView.builder(
+            itemCount: taskListingModel.tasks!.length,
+            itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 leading: Icon(Icons.task),
                 title: Text(taskListingModel.tasks![index].description.toString()),
@@ -49,7 +36,7 @@ class GetAllTask extends StatelessWidget {
                     Checkbox(
                         value: taskListingModel.tasks![index].complete ?? false,
                         onChanged: taskListingModel.tasks![index].complete == true ? null
-                        : (value)async{
+                            : (value)async{
                           try{
                             await TaskServices().markTaskAsCompleted(
                                 token: userProvider.getToken().toString(),
@@ -60,16 +47,16 @@ class GetAllTask extends StatelessWidget {
                           }
                         }),
                     IconButton(onPressed: ()async{
-                     try {
+                      try {
                         await TaskServices().deleteTask(
                             token: userProvider.getToken().toString(),
                             taskID: taskListingModel.tasks![index].id.toString()
                         );
                       }
-                     catch(e){
-                       ScaffoldMessenger.of(context)
-                           .showSnackBar(SnackBar(content: Text(e.toString())));
-                     }
+                      catch(e){
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(e.toString())));
+                      }
                     }, icon: Icon(Icons.delete,color: Colors.red,)),
                     IconButton(onPressed: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateTask(model: taskListingModel.tasks![index])));
@@ -78,7 +65,7 @@ class GetAllTask extends StatelessWidget {
                 ),
               );
             },);
-          },
+        },
 
       ),
     );
