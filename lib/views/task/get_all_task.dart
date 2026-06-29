@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kinza_apis/models/taskListing.dart';
 import 'package:kinza_apis/services/task.dart';
 import 'package:kinza_apis/views/task/create_task.dart';
+import 'package:kinza_apis/views/task/filter_task.dart';
 import 'package:kinza_apis/views/task/get_completed.dart';
 import 'package:kinza_apis/views/task/get_incompleted.dart';
+import 'package:kinza_apis/views/task/search_task.dart';
 import 'package:kinza_apis/views/task/update_task.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,12 @@ class GetAllTask extends StatelessWidget {
           IconButton(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=> GetInCompletedTask()));
           }, icon: Icon(Icons.incomplete_circle)),
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchTask()));
+          }, icon: Icon(Icons.search)),
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> FilterTask()));
+          }, icon: Icon(Icons.filter)),
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: (){

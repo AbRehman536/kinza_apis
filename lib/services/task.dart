@@ -79,7 +79,8 @@ class TaskServices {
 
   ///Search Task
   Future<TaskListingModel> searchTask(
-      {required String token, required String searchTask}) async {
+      {required String token,
+        required String searchTask}) async {
     try {
       http.Response response = await http.get(
           Uri.parse('$baseURL/todos/search?keywords=$searchTask'),
